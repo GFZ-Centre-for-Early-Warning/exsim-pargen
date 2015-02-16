@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 #!/usr/bin/env python
 """exsimpargen.py: utility for generating input parameter files for exsim simulation software"""
@@ -13,7 +13,7 @@ __maintainer__ = "Massimiliano Pittore"
 __email__ = "pittore@gfz-potsdam.de"
 
 
-# In[5]:
+# In[3]:
 
 from string import Template
 import numpy as np
@@ -22,11 +22,11 @@ from random import choice
 import scipy.stats as stats
 
 
-# In[12]:
+# In[4]:
 
 #init parameter file text with placeholders for variables
 #NOTE: don´t modify it
-par_text=Template('!Input file for program EXSIM12\n!Title\n  $title\n!Write acc, psa, husid files for each site?\n $write_files\n!MW, Stress, flag (0=fmax; 1=kappa), fmax or kappa\n  $mw $stress  $kappa_flag  $fmax_kappa\n!lat and lon of upper edge of fault\n  $upedge_lat $upedge_lon\n!strike,dip, depth of fault\n  $strike $dip $depth_of_fault\n!fault type (S=strikeslip; R=reverse; N=normal; U=undifferentiated)\n! (Only used if Wells and Coppersmith is used to obtain FL and FW).\n  $fault_style\n!fault length and width, dl, dw, stress_ref\n!Note: Force program to use Wells and Coppersmith (WC) for FL and/or FW if\n! either entry = 0.0.\n! dl and dw are the subsource length and width\n! stress_ref is a reference to allow scaling of WC size as per Atkinson&Boore(2006BSSA)\n! If Wells and Coppersmith are used to obtain FL and/or FW, the WC values are\n! modified to account for the scaling implied by differences in the stress\n! specified above and a stress that is assumed to be valid for the generic WC\n! relations; this stress is stress_ref. The value of 70 bars is an educated\n! guess for stress_ref, but it is not based on a quantitative analysis.\n! The WC values of FL and/or FW are multiplied by the factor\n! (stress_ref/stress)^(1/3).\n! Note that four entries on the following line are needed as placeholders,\n! even if not used)\n  $fault_length $fault_width $fault_sub_length $fault_sub_width $stress_ref !fault length and width, dl, dw, stress_ref\n!vrup/beta\n  $v_rup\n!hypo location in along fault and down dip distance from the fault\n!reference point (an upper corner)(-1.0, -1.0 for a random location);\n!number of iterations over hypocenter (need an entry, but only used if\n!either of the first two values are -1.0, indicating a random location)\n  $hypo_loc_along  $hypo_loc_down  $hypo_iter\n!Enter type of risetime (1=original, 2=1/f0)\n $risetime_type\n!tpadl, tpadt, delta t (length of 0pads at front and back of time series, timestep)\n $tpad_l $tpad_t $delta_t\n!beta , rho\n  $beta $rho\n!Geometric spreading: this example is for bilinear with transition at 40km\n! r_ref, nseg (hinged line segments), (rlow(i), slope)\n! (Usually set r_ref = 1.0 km)\n    1.0\n    2\n      1.0 -1.0\n     40.0 -0.5\n!Quality factor: Qmin, Q0, and eta, Q=max(Qmin, Q0*F**eta)\n   $q_min  $q_0  $eta\n!path duration: example has duration increasing as 0.05R\n!(ndur_hinges,(rdur(i), dur(i), i = 1, ndur_hinges), durslope)\n    2\n    0.0 0.0\n   10.0 0.0\n  0.05\n!Type of window: 1 for Saragoni-Hart taper windows, 0 for tapered boxcar\n!window, epsilon, and eta values of Saragoni-Hart window\n  1    0.2    0.2\n!low-cut filter corner (Hz), nslope (0 ==> no filter)\n $lc_filter_corner $lc_filter_nslope\n! %damping of response spectra\n $damping\n!# of f and Min and Max F for response spectra\n\
+par_text=Template('!Input file for program EXSIM12\n!Title\n  $title\n!Write acc, psa, husid files for each site?\n $write_files\n!MW, Stress, flag (0=fmax; 1=kappa), fmax or kappa\n  $mw $stress  $kappa_flag  $fmax_kappa\n!lat and lon of upper edge of fault\n  $upedge_lat $upedge_lon\n!strike,dip, depth of fault\n  $strike $dip $depth_of_fault\n!fault type (S=strikeslip; R=reverse; N=normal; U=undifferentiated)\n! (Only used if Wells and Coppersmith is used to obtain FL and FW).\n  $fault_style\n!fault length and width, dl, dw, stress_ref\n!Note: Force program to use Wells and Coppersmith (WC) for FL and/or FW if\n! either entry = 0.0.\n! dl and dw are the subsource length and width\n! stress_ref is a reference to allow scaling of WC size as per Atkinson&Boore(2006BSSA)\n! If Wells and Coppersmith are used to obtain FL and/or FW, the WC values are\n! modified to account for the scaling implied by differences in the stress\n! specified above and a stress that is assumed to be valid for the generic WC\n! relations; this stress is stress_ref. The value of 70 bars is an educated\n! guess for stress_ref, but it is not based on a quantitative analysis.\n! The WC values of FL and/or FW are multiplied by the factor\n! (stress_ref/stress)^(1/3).\n! Note that four entries on the following line are needed as placeholders,\n! even if not used)\n  $fault_length $fault_width $fault_sub_length $fault_sub_width $stress_ref !fault length and width, dl, dw, stress_ref\n!vrup/beta\n  $v_rup\n!hypo location in along fault and down dip distance from the fault\n!reference point (an upper corner)(-1.0, -1.0 for a random location);\n!number of iterations over hypocenter (need an entry, but only used if\n!either of the first two values are -1.0, indicating a random location)\n  $hypo_loc_along  $hypo_loc_down  $hypo_iter\n!Enter type of risetime (1=original, 2=1/f0)\n $risetime_type\n!tpadl, tpadt, delta t (length of 0pads at front and back of time series, timestep)\n $tpad_l $tpad_t $delta_t\n!beta , rho\n  $beta $rho\n!Geometric spreading: this example is for bilinear with transition at 40km\n! r_ref, nseg (hinged line segments), (rlow(i), slope)\n! (Usually set r_ref = 1.0 km)\n$geom_spreading\n!Quality factor: Qmin, Q0, and eta, Q=max(Qmin, Q0*F**eta)\n   $q_min  $q_0  $eta\n!path duration: example has duration increasing as 0.05R\n!(ndur_hinges,(rdur(i), dur(i), i = 1, ndur_hinges), durslope)\n$path_duration\n!Type of window: 1 for Saragoni-Hart taper windows, 0 for tapered boxcar\n!window, epsilon, and eta values of Saragoni-Hart window\n  1    0.2    0.2\n!low-cut filter corner (Hz), nslope (0 ==> no filter)\n $lc_filter_corner $lc_filter_nslope\n! %damping of response spectra\n $damping\n!# of f and Min and Max F for response spectra\n\
   $res_spectra_num_f $res_spectra_min_f   $res_spectra_max_f\n\
 !no. of frequencies for summary output (10 max):\n\
  $num_f_summary_output\n\
@@ -77,7 +77,7 @@ par_text=Template('!Input file for program EXSIM12\n!Title\n  $title\n!Write acc
   $site_coords\n')
 
 
-# In[13]:
+# In[9]:
 
 #set defaults as a dictionary
 # NOTE: define here the default values
@@ -103,6 +103,14 @@ v_rup=0.85,
 hypo_loc_along=99.0,
 hypo_loc_down=18.0,  
 hypo_iter=1,
+geom_spreading='    1.0\n\
+    2\n\
+      1.0 -1.0\n\
+     40.0 -0.5',
+path_duration='    2\n\
+    0.0 0.0\n\
+   10.0 0.0\n\
+  0.05',
 risetime_type=2,
 tpad_l=50.0, 
 tpad_t=20.0, 
@@ -142,7 +150,7 @@ site_coord_type=1,                         # simulation variable
 site_coords='42.854302 74.533163')         # simulation variable
 
 
-# In[2]:
+# In[6]:
 
 # define (average) values for the simulation parameters
 upedge_lat=42.7
@@ -159,7 +167,7 @@ dip=50.0
 depth_of_fault=0.0
 
 
-# In[ ]:
+# In[7]:
 
 # number of samples for each simulation parameter
 nmags=10
@@ -171,11 +179,12 @@ nstress=10
 #around 10'000 simulations with 10 draws each
 
 
-# In[ ]:
+# In[10]:
 
 #stress_array=np.linspace(50,300,nstress)
 #stress_array
 #stress_array=np.random.uniform.ppf(np.linspace(0.001,0.99,nstress),50,300)
+print(par_text.substitute(sim_pars))
 
 
 # In[ ]:
